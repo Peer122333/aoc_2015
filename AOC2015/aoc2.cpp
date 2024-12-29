@@ -119,20 +119,6 @@ double calculate_total_paper(const std::string& filepath) {
     return total_paper;
 }
 
-// --- Main Function ---
-int aoc2() {
-    const std::string filepath = "aoc2_package_dimensions.txt";  // Eingabedatei mit Paketmaßen
-    double total_paper = calculate_total_paper(filepath);
-
-    if (total_paper > 0) {
-        std::cout << "Total wrapping paper needed: " << std::fixed << total_paper << " square feet" << std::endl;
-    } else {
-        std::cerr << "No valid data found or an error occurred." << std::endl;
-    }
-
-    return 0;
-}
-
 
 /*
     --- Part Two ---
@@ -150,3 +136,65 @@ int aoc2() {
     A present with dimensions 1x1x10 requires 1+1+1+1 = 4 feet of ribbon to wrap the present plus 1*1*10 = 10 feet of ribbon for the bow, for a total of 14 feet.
     How many total feet of ribbon should they order?
 */
+
+double wrap_ribbon(double l, double w, double h){
+    return std::min({2*(l+w), 2*(l+h), 2*(w+h)});
+}
+
+double bow_ribbon(double l, double w, double h){
+    return l*w*h;
+}
+
+double total_ribbon(double l, double w, double h){
+    return wrap_ribbon(l, w, h) + bow_ribbon(l, w, h);
+}
+
+/**
+ * @brief Calculates the total ribbon amount needed for all boxes listed in a file.
+ * @param filepath Path to the file containing the list of boxes.
+ * @return Total ribbon needed.
+ */
+double calculate_total_ribbon(const std::string& filepath) {
+    std::string data = package_list_to_string(filepath);
+    if (data.empty()) {
+        return 0;  // Keine Daten vorhanden
+    }
+
+    std::istringstream input_string_stream(data);
+    std::string line;
+    double total_ribbon_len = 0;
+
+    while (std::getline(input_string_stream, line)) {
+        try {
+            auto [l, w, h] = parse_line(line);  // Parse die Maße
+            total_ribbon_len += total_ribbon(l, w, h);
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;  // Fehler ausgeben
+        }
+    }
+
+    return total_ribbon_len;
+}
+
+
+// --- Main Function ---
+int aoc2() {
+    const std::string filepath = "aoc2_package_dimensions.txt";  // Eingabedatei mit Paketmaßen
+    double total_paper = calculate_total_paper(filepath);
+    
+    std::cout << "Part 1 - Wrapping Paper" << std::endl;
+    if (total_paper > 0) {
+        std::cout << "Total wrapping paper needed: " << std::fixed << total_paper << " square feet" << std::endl;
+    } else {
+        std::cerr << "No valid data found or an error occurred." << std::endl;
+    }
+
+    double total_ribbon_length = calculate_total_ribbon(filepath);
+    std::cout << "Part 2 - Wrapping Ribbon" << std::endl;
+    if (total_ribbon_length > 0) {
+        std::cout << "Total ribbon for wrapping presents needed: " << std::fixed << total_ribbon_length << " feet" << std::endl;
+    } else {
+        std::cerr << "No valid data found or an error occurred." << std::endl;
+    }
+    return 0;
+}
