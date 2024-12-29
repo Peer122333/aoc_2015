@@ -9,5 +9,8 @@
 #define aoc2_hpp
 
 #include <stdio.h>
+#include <iostream>
+
+int aoc2();
 
 #endif /* aoc2_hpp */

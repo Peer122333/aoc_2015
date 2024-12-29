@@ -10,6 +10,6 @@
 
 #include <string>
 
-void aoc1(const std::string& input);
+void aoc1();
 
 #endif // AOC1_HPP

@@ -31,41 +31,56 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "aoc1.hpp"
 
+/**
+ * @brief Liest den gesamten Inhalt einer Datei und gibt ihn als std::string zurück.
+ * @param filepath Der Pfad zur Datei, die gelesen werden soll.
+ * @return Der Inhalt der Datei als String. Gibt einen leeren String zurück, falls die Datei nicht geöffnet werden kann.
+ */
 std::string file_to_string(const std::string& filepath) {
     std::ifstream file(filepath);
-    if (!file.is_open()) {
-        std::cerr << "Datei konnte nicht geöffnet werden." << std::endl;
-        return "";  // Rückgabe eines leeren Strings bei Fehler
+    if (!file) {  // Überprüft, ob die Datei erfolgreich geöffnet wurde
+        throw std::runtime_error("Fehler: Datei konnte nicht geöffnet werden: " + filepath);
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();  // Liest den gesamten Inhalt der Datei in den buffer
-    file.close();  // Schließe die Datei
-    return buffer.str();  // Konvertiere den Inhalt zu einem std::string und gebe ihn zurück
+    std::ostringstream buffer;
+    buffer << file.rdbuf();  // Liest den gesamten Dateiinhalt in den Stream
+    return buffer.str();
 }
 
+/**
+ * @brief Zählt die Stockwerke basierend auf den Zeichen '(' und ')'.
+ * @param input Der String mit den Stockwerkanweisungen.
+ * @return Das finale Stockwerk von Santa.
+ */
 int count_floors(const std::string& input) {
     int santa_floor = 0;
-    for (int i = 0; i < input.length(); i++) {
-        char ch = input[i];
+
+    for (char ch : input) {  // Verwende einen Range-Based-For-Loop
         if (ch == '(') {
-            santa_floor++;  // Erhöhe den Stockwerkzähler bei '('
+            ++santa_floor;  // Erhöhe den Stockwerkzähler
         } else if (ch == ')') {
-            santa_floor--;  // Verringere den Stockwerkzähler bei ')'
+            --santa_floor;  // Verringere den Stockwerkzähler
         }
     }
+
     return santa_floor;  // Rückgabe des finalen Stockwerks
 }
 
-void aoc1(const std::string& filename) {
-    std::string input = file_to_string(filename); // Lese Dateiinhalt
-//    if (input.empty()) {
-//        std::cerr << "Fehler beim Lesen der Datei oder Datei ist leer." << std::endl;
-//        return;
-//    }
+/**
+ * @brief Führt die Berechnung des Stockwerks aus basierend auf einer Datei.
+ */
+void aoc1() {
+    const std::string filepath = "aoc1_floor_plan.txt";
+    try {
+        std::string input = file_to_string(filepath);  // Lese den Dateiinhalt
+        if (input.empty()) {
+            throw std::runtime_error("Fehler: Datei ist leer: " + filepath);
+        }
 
-    int santa_floor = count_floors(input);  // Berechne das endgültige Stockwerk
-    std::cout << "The ending floor of Santa is: " << santa_floor << std::endl;
+        int santa_floor = count_floors(input);  // Berechne das finale Stockwerk
+        std::cout << "Das finale Stockwerk von Santa ist: " << santa_floor << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;  // Gibt eine Fehlermeldung aus
+    }
 }
