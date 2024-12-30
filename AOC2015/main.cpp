@@ -9,6 +9,8 @@
 #include <sstream>
 #include "aoc1.hpp"
 #include "aoc2.hpp"
+#include "aoc3.hpp"
+#include "aoc4.hpp"
 
 int main(int argc, const char * argv[]) {
     std::cout << "AOC1: " << std::endl;
@@ -22,6 +24,10 @@ int main(int argc, const char * argv[]) {
     std::cout << "################################################" << std::endl;
 //  DAY 2 - ####################
     aoc2();
-    
+
+    std::cout << "AOC3: " << std::endl;
+    std::cout << "################################################" << std::endl;
+//  DAY 3 - ####################
+    aoc3();
     return 0;
 }

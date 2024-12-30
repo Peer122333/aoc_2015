@@ -38,14 +38,14 @@
  * @return Der Inhalt der Datei als String. Gibt einen leeren String zurück, falls die Datei nicht geöffnet werden kann.
  */
 std::string file_to_string(const std::string& filepath) {
-    std::ifstream file(filepath);
-    if (!file) {  // Überprüft, ob die Datei erfolgreich geöffnet wurde
+    std::ifstream file(filepath); // Öffnet die Datei im Lese-Modus (ifstream = input - file - stream)
+    if (!file) {                  // Überprüft, ob die Datei erfolgreich geöffnet wurde
         throw std::runtime_error("Fehler: Datei konnte nicht geöffnet werden: " + filepath);
     }
-
-    std::ostringstream buffer;
-    buffer << file.rdbuf();  // Liest den gesamten Dateiinhalt in den Stream
-    return buffer.str();
+    
+    std::ostringstream buffer; // erstellt Stringstream um Dateiinhalt zu speichern
+    buffer << file.rdbuf();    // Liest den gesamten Dateiinhalt in den Stringstream
+    return buffer.str();       // Inhalt des buffers als String zurück
 }
 
 /**
